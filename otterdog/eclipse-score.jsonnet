@@ -47,6 +47,7 @@ local newScoreRepo(name, pages) = orgs.newRepo(name) {
 
   // Remove some features, to avoid having too many options where stuff is located
   has_discussions: false,
+  has_issues: false,
   has_projects: false,
   has_wiki: false,
 
