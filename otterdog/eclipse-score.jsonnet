@@ -146,8 +146,17 @@ local newDependableElementRepo(name, subcategory = null) = newScoreRepo(name, pa
 #                category is conceptually either "infrastructure" (no subcategory) or
 #                "infrastructure.<subcategory>" when a subcategory is given.
 local newInfrastructureTeamRepo(name, pages = false, subcategory = null) =
+  newScoreRepo(name, pages = pages, category = "infrastructure", subcategory = subcategory)
+  {
+    # enable github code scanning for all infrastructure repositories by default
+    code_scanning_default_setup_enabled: true,
 
-  newScoreRepo(name, pages = pages, category = "infrastructure", subcategory = subcategory);
+    # typical candidates are GitHub Actions and Python scripts for automation, but this can be adjusted as needed per repository
+    code_scanning_default_languages+: [
+      "actions",
+      "python",
+    ],
+  };
 
 # Publication to pypi can only be triggered by infrastructure-maintainers and only from main branch or tag
 local pypi_infra_env = orgs.newEnvironment('pypi') {
@@ -403,11 +412,6 @@ orgs.newOrg('automotive.score', 'eclipse-score') {
   _repositories+:: [
     newInfrastructureTeamRepo('.github', pages = true) {
       description: "Houses the organisation README",
-      code_scanning_default_setup_enabled: true,
-      code_scanning_default_languages+: [
-        "actions",
-        "python",
-      ],
     },
 
     newInfrastructureTeamRepo('bazel_registry', subcategory = "tooling") {
@@ -1123,6 +1127,11 @@ orgs.newOrg('automotive.score', 'eclipse-score') {
 
     newInfrastructureTeamRepo('bazel_registry_ui', pages = true, subcategory = "tooling") {
       description: "House the ui for bazel_registry in Score",
+
+      # It's a fork. We don't want to change the entire codebase.
+      code_scanning_default_setup_enabled: false,
+      dependabot_security_updates_enabled: false,
+
       rulesets: [], # reset rulesets
       gh_pages_build_type: "legacy",
       gh_pages_source_branch: "gh-pages",
@@ -1134,6 +1143,11 @@ orgs.newOrg('automotive.score', 'eclipse-score') {
       description: "S-CORE fork of bazelbuild/rules_rust",
       forked_repository: "bazelbuild/rules_rust",
       default_branch: "score_main",
+
+      # It's a fork. We don't want to change the entire codebase.
+      code_scanning_default_setup_enabled: false,
+      dependabot_security_updates_enabled: false,
+
       rulesets+: [
         orgs.newRepoRuleset('score_main') {
           include_refs+: [
