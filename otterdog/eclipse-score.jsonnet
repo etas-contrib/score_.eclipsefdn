@@ -583,9 +583,10 @@ orgs.newOrg('automotive.score', 'eclipse-score') {
       dependabot_security_updates_enabled: false,
       has_projects: true,
       has_wiki: true,
-      code_scanning_default_setup_enabled: true,
+      code_scanning_default_setup_enabled: false,
       code_scanning_default_languages+: [
         "actions",
+        "c-cpp",
       ],
       branch_protection_rules: [
         main_branch_protection_rule
